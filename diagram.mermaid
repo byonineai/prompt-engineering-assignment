@@ -1,0 +1,69 @@
+classDiagram
+
+class InvestmentAnalysis {
+    -PromptingStrategy strategy
+    +analyze(prompt)
+    +set_strategy(strategy)
+}
+
+class PromptingStrategy {
+    <<interface>>
+    +execute(prompt)
+}
+
+class ChainOfThoughtStrategy {
+    +execute(prompt)
+}
+
+class SelfConsistencyStrategy {
+    +execute(prompt)
+    +method_one()
+    +method_two()
+    +compare_results()
+}
+
+class FewShotStrategy {
+    -SimpleModel model
+    +execute(prompt)
+}
+
+class CalculationResult {
+    +float final_value
+    +str method
+    +bool is_consistent
+    +List~LogEntry~ logs
+}
+
+class LogEntry {
+    +int year
+    +float starting_balance
+    +float return_earned
+    +float fee_deducted
+    +float tax_deducted
+    +float ending_balance
+}
+
+class SimpleModel {
+    +List~TrainingExample~ examples
+    +add_example(example)
+    +predict(prompt)
+}
+
+class TrainingExample {
+    +str prompt
+    +str response
+}
+
+InvestmentAnalysis --> PromptingStrategy : uses
+
+PromptingStrategy <|.. ChainOfThoughtStrategy
+PromptingStrategy <|.. SelfConsistencyStrategy
+PromptingStrategy <|.. FewShotStrategy
+
+ChainOfThoughtStrategy --> CalculationResult : produces
+SelfConsistencyStrategy --> CalculationResult : produces
+
+CalculationResult *-- "1..*" LogEntry : logs
+
+FewShotStrategy --> SimpleModel : uses
+SimpleModel *-- "1..*" TrainingExample : examples
